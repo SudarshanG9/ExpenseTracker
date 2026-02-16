@@ -13,8 +13,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(expenses.router, prefix="/expenses", tags=["expenses"])
-# app.include_router(receipts.router, prefix="/receipts", tags=["receipts"])
+
+app.include_router(expenses.router,prefix="/expenses",tags=["expenses"])
+app.include_router(receipts.router,prefix="/receipts",tags=["receipts"])
+
 
 @app.get("/")
 def read_root():
