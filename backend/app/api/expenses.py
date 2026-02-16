@@ -1,41 +1,25 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
-from typing import List
-
-from app import crud, models, schemas
-from app.database import SessionLocal, engine
-
-models.Base.metadata.create_all(bind=engine)
+from app.services.expense_tracker import create_expense, get_expenses, update_expense, delete_expense
+from app.schemas.expense import ExpenseCreate, ExpenseUpdate, ExpenseResponse
+from fastapi import APIRouter
 
 router = APIRouter()
 
-# Dependency
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
-@router.post("/", response_model=schemas.ExpenseResponse)
-def create_expense(expense: schemas.ExpenseCreate, db: Session = Depends(get_db)):
-    return crud.create_expense(db=db, expense=expense)
+@router.post("/", response_model=ExpenseResponse)
+async def create_expense_endpoint(expense: ExpenseCreate):
+    return create_expense(expense)
 
-@router.get("/", response_model=List[schemas.ExpenseResponse])
-def read_expenses(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    expenses = crud.get_expenses(db, skip=skip, limit=limit)
-    return expenses
 
-@router.get("/{expense_id}", response_model=schemas.ExpenseResponse)
-def read_expense(expense_id: int, db: Session = Depends(get_db)):
-    db_expense = crud.get_expense(db, expense_id=expense_id)
-    if db_expense is None:
-        raise HTTPException(status_code=404, detail="Expense not found")
-    return db_expense
+@router.get("/", response_model=list[ExpenseResponse])
+async def get_expenses_endpoint():
+    return get_expenses()
 
-@router.delete("/{expense_id}", response_model=schemas.ExpenseResponse)
-def delete_expense(expense_id: int, db: Session = Depends(get_db)):
-    db_expense = crud.delete_expense(db, expense_id=expense_id)
-    if db_expense is None:
-        raise HTTPException(status_code=404, detail="Expense not found")
-    return db_expense
+
+@router.put("/{expense_id}", response_model=ExpenseResponse)
+async def update_expense_endpoint(expense_id: int, expense: ExpenseUpdate):
+    return update_expense(expense_id, expense)
+
+
+@router.delete("/{expense_id}", response_model=ExpenseResponse)
+async def delete_expense_endpoint(expense_id: int):
+    return delete_expense(expense_id)
