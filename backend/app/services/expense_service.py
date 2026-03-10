@@ -1,22 +1,23 @@
-from app.schemas.expense import ExpenseCreate, ExpenseUpdate, ExpenseResponse
-
+from app.models.expenses import ExpenseCreate, ExpenseUpdate, ExpenseResponse
 
 temp_expense = []
 expense_id = 1
 
 
-def create_expense(expense: ExpenseCreate):
+def create_expense(expense: ExpenseCreate) -> ExpenseResponse:
     global expense_id
     newExpense = expense.dict()
+
     newExpense['id'] = expense_id
     expense_id += 1
     temp_expense.append(newExpense)
     return newExpense
 
 
+
+
 def get_expenses() -> list[ExpenseResponse]:
     return temp_expense
-
 
 
 def update_expense(expense_id: int, expense: ExpenseUpdate) -> ExpenseResponse:

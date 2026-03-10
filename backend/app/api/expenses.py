@@ -1,5 +1,5 @@
 from app.services.expense_tracker import create_expense, get_expenses, update_expense, delete_expense
-from app.schemas.expense import ExpenseCreate, ExpenseUpdate, ExpenseResponse
+from app.models.expense import ExpenseCreate, ExpenseUpdate, ExpenseResponse
 from fastapi import APIRouter
 
 router = APIRouter()
