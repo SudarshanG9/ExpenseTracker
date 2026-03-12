@@ -1,27 +1,14 @@
-from pydatnic import BaseModel
-from typing import Optional
-from datetime import date
+from sqlalchemy import Column, Integer, String, Float, Date
+from app.database import Base
 
-class ExpenseCreate(BaseModel):
-    name: str
-    amount: float
-    category: str
-    date: date
+class Expense(Base):
+    __tablename__ = "expenses"
 
-class ExpenseUpdate(BaseModel):
-    name: Optional[str] = None
-    amount: Optional[float] = None
-    category: Optional[str] = None
-    date: Optional[date] = None
+    id = Column(Integer, primary_key=True, index=True)
 
-
-
-class ExpenseResponse(BaseModel):
-    id: int
-    name: str
-    amount: float
-    category: str
-    date: date
-
+    title = Column(String, nullable = False)
+    amount = Column(Float, nullable = False)
+    category = Column(String, nullable = False)
+    date = Column(Date, nullable = False)
 
 
