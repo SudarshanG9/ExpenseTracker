@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.api.receipts import router as receipts_router
 from app.api import expenses, receipts
 
 app = FastAPI()
