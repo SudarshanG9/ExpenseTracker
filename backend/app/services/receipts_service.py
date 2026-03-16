@@ -14,7 +14,7 @@ from app.schemas.expense import ExpenseCreate
 def preprocess_image(image_path: str):
     image = cv2.imread(image_path)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    thresh = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY)
+    _, thresh = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY)
     return thresh
 
 
@@ -77,36 +77,37 @@ def classify_category(text: str):
     return "Misc"
 
     
-def ocr(image_path: str):
+def ocr(image_path: str, db: Session):
     text = extract_text(image_path)
     products = extract_product(text)
     total = extract_total(text)
     date = extract_date(text)
 
-    expenses  = []
+    expenses = []
 
     if products:
-        for name,price in products:
+        for product in products:
             expense_record = ExpenseCreate(
-                title = name,
-                amount = price,
-                category = "",
-                date = date,
-                description = "",
-                receipt_url = image_path
+                title=product["name"],
+                amount=product["price"],
+                category=classify_category(product["name"]),
+                date=date or datetime.now().date(),
+                description="",
+                receipt_url=image_path
             )
-            expense = create_expense(db,expense_record)
+            expense = create_expense(db, expense_record)
             expenses.append(expense)
     elif total:
         expense_record = ExpenseCreate(
-            title = "Receipt",
-            amount = total,
-            category = "",
-            date = date,
-            description = "",
-            receipt_url = image_path
+            title="Receipt",
+            amount=total,
+            category=classify_category(text),
+            date=date or datetime.now().date(),
+            description="",
+            receipt_url=image_path
         )
-        expense = create_expense(db,expense_record)
+        expense = create_expense(db, expense_record)
         expenses.append(expense)
 
     return expenses
+

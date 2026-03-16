@@ -25,5 +25,5 @@ class ExpenseResponse(ExpenseBase):
     id: int
     created_at: datetime | None = None
 
-    class Config:
-        orm_mode = True
+    model_config = {"from_attributes": True}
+
