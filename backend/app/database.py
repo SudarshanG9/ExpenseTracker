@@ -15,3 +15,17 @@ SessionLocal = sessionmaker(
 )
 
 Base = declarative_base()
+
+
+def get_db():
+    """FastAPI dependency that provides a database session per request."""
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+def create_tables():
+    """Create all tables defined by models that inherit from Base."""
+    Base.metadata.create_all(bind=engine)

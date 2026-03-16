@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.receipts import router as receipts_router
 from app.api import expenses, receipts
+from app.database import create_tables
+import app.models.expense  # ensure model is registered with Base
 
 app = FastAPI()
-
 
 app.add_middleware(
     CORSMiddleware,
@@ -14,9 +14,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Create DB tables on startup
+create_tables()
 
-app.include_router(expenses.router,prefix="/expenses",tags=["expenses"])
-app.include_router(receipts.router,prefix="/receipts",tags=["receipts"])
+# Routers already define their own prefix, so no prefix needed here
+app.include_router(expenses.router)
+app.include_router(receipts.router)
 
 
 @app.get("/")
