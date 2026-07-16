@@ -18,23 +18,21 @@ import {
  */
 const ExpenseBarChart = ({ timeframe = 'Monthly' }) => {
     // DUMMY DATA: Hardcoded datasets to visualize the UI.
-    // We keep this inside the component for now as requested.
-    // In a real app, this data would be passed down as a prop from the backend.
     const dummyData = {
         Daily: [
-            { label: 'Mon', amount: 45 },
-            { label: 'Tue', amount: 120 },
-            { label: 'Wed', amount: 30 },
-            { label: 'Thu', amount: 80 },
-            { label: 'Fri', amount: 150 },
-            { label: 'Sat', amount: 200 },
-            { label: 'Sun', amount: 90 },
+            { label: 'Mon', amount: 450 },
+            { label: 'Tue', amount: 1200 },
+            { label: 'Wed', amount: 300 },
+            { label: 'Thu', amount: 800 },
+            { label: 'Fri', amount: 1850 },
+            { label: 'Sat', amount: 600 },
+            { label: 'Sun', amount: 900 },
         ],
         Weekly: [
-            { label: 'Week 1', amount: 450 },
-            { label: 'Week 2', amount: 320 },
-            { label: 'Week 3', amount: 500 },
-            { label: 'Week 4', amount: 280 },
+            { label: 'Week 1', amount: 4500 },
+            { label: 'Week 2', amount: 3200 },
+            { label: 'Week 3', amount: 5000 },
+            { label: 'Week 4', amount: 2800 },
         ],
         Monthly: [
             { label: 'Jan', amount: 1200 },
@@ -46,54 +44,62 @@ const ExpenseBarChart = ({ timeframe = 'Monthly' }) => {
         ]
     };
 
-    // Select the correct array of data based on the timeframe prop.
-    // Fallback to Monthly if an invalid timeframe is passed.
     const activeData = dummyData[timeframe] || dummyData.Monthly;
 
-    // Formatter function for the tooltip to display currency nicely
-    const formatCurrency = (value) => `$${value}`;
+    const formatCurrency = (value) => `₹${value.toLocaleString('en-IN')}`;
+
+    // Custom tooltip styled for dark theme
+    const CustomTooltip = ({ active, payload, label }) => {
+        if (active && payload && payload.length) {
+            return (
+                <div className="bg-[#1a1f2e] border border-gray-700 rounded-lg px-3 py-2 shadow-xl">
+                    <p className="text-xs text-gray-400 mb-1">{label}</p>
+                    <p className="text-sm font-semibold text-white">{formatCurrency(payload[0].value)}</p>
+                </div>
+            );
+        }
+        return null;
+    };
 
     return (
-        <div className="w-full h-[300px] mt-4">
-            {/* ResponsiveContainer ensures the chart fills its parent div perfectly */}
+        <div className="w-full h-[280px] mt-2">
             <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                     data={activeData}
-                    margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                    margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
                 >
-                    {/* Background grid lines (horizontal only for a cleaner look) */}
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
+                    {/* Dark grid lines */}
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1e2433" />
 
-                    {/* X-Axis: Shows the labels (e.g., Mon, Tue, Jan, Feb) */}
+                    {/* X-Axis */}
                     <XAxis
                         dataKey="label"
                         axisLine={false}
                         tickLine={false}
-                        tick={{ fill: '#6B7280', fontSize: 12 }}
+                        tick={{ fill: '#6B7280', fontSize: 11 }}
                         dy={10}
                     />
 
-                    {/* Y-Axis: Shows the numbers */}
+                    {/* Y-Axis */}
                     <YAxis
                         axisLine={false}
                         tickLine={false}
-                        tick={{ fill: '#6B7280', fontSize: 12 }}
-                        tickFormatter={(value) => `$${value}`}
+                        tick={{ fill: '#6B7280', fontSize: 11 }}
+                        tickFormatter={(value) => `₹${value}`}
                     />
 
-                    {/* Tooltip: The popup that appears when hovering over a bar */}
+                    {/* Tooltip */}
                     <Tooltip
-                        formatter={formatCurrency}
-                        cursor={{ fill: '#F3F4F6' }} // Light gray background on hover
-                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+                        content={<CustomTooltip />}
+                        cursor={{ fill: 'rgba(255,255,255,0.03)' }}
                     />
 
-                    {/* The actual bars representing the 'amount' data key */}
+                    {/* Bars with gradient blue */}
                     <Bar
                         dataKey="amount"
                         fill="#3B82F6"
-                        radius={[4, 4, 0, 0]} // Rounds the top corners of the bars
-                        barSize={32} // Max width of the bars
+                        radius={[6, 6, 0, 0]}
+                        barSize={28}
                     />
                 </BarChart>
             </ResponsiveContainer>

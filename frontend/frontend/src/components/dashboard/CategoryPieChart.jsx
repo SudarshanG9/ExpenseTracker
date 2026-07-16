@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 
 /**
  * CategoryPieChart Component
@@ -11,47 +11,59 @@ const CategoryPieChart = () => {
     // 1. STATE LIVES HERE: To control the active timeframe filter
     const [timeframe, setTimeframe] = useState('Monthly');
 
-    // 2. DUMMY DATA: Hardcoded datasets for the UI. 
-    // Later, these will be replaced by data fetched from your FastAPI backend.
+    // 2. DUMMY DATA
     const dummyData = {
         Daily: [
-            { name: 'Food', value: 25 },
-            { name: 'Transport', value: 15 },
-            { name: 'Coffee', value: 5 },
+            { name: 'Food & Dining', value: 250 },
+            { name: 'Transport', value: 150 },
+            { name: 'Coffee', value: 50 },
         ],
         Weekly: [
-            { name: 'Food', value: 150 },
-            { name: 'Transport', value: 60 },
-            { name: 'Groceries', value: 120 },
-            { name: 'Entertainment', value: 40 },
+            { name: 'Food & Dining', value: 1500 },
+            { name: 'Transport', value: 600 },
+            { name: 'Shopping', value: 1200 },
+            { name: 'Entertainment', value: 400 },
         ],
         Monthly: [
-            { name: 'Housing', value: 1200 },
-            { name: 'Food', value: 400 },
-            { name: 'Transport', value: 150 },
-            { name: 'Utilities', value: 200 },
-            { name: 'Entertainment', value: 100 },
+            { name: 'Food & Dining', value: 2450 },
+            { name: 'Transport', value: 1520 },
+            { name: 'Shopping', value: 1280 },
+            { name: 'Entertainment', value: 980 },
+            { name: 'Utilities', value: 720 },
+            { name: 'Others', value: 489 },
         ]
     };
 
-    // Select the active dataset based on the current state
     const activeData = dummyData[timeframe];
+    const total = activeData.reduce((sum, item) => sum + item.value, 0);
 
-    // Colors for the pie slices
-    const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
+    // Vibrant colors for the pie slices
+    const COLORS = ['#10B981', '#3B82F6', '#A855F7', '#F97316', '#EAB308', '#EF4444'];
+
+    // Custom tooltip
+    const CustomTooltip = ({ active, payload }) => {
+        if (active && payload && payload.length) {
+            return (
+                <div className="bg-[#1a1f2e] border border-gray-700 rounded-lg px-3 py-2 shadow-xl">
+                    <p className="text-xs text-gray-400">{payload[0].name}</p>
+                    <p className="text-sm font-semibold text-white">₹{payload[0].value.toLocaleString('en-IN')}</p>
+                </div>
+            );
+        }
+        return null;
+    };
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 h-full flex flex-col">
+        <div className="h-full flex flex-col">
 
             {/* Header section with Title and Dropdown */}
-            <div className="flex justify-between items-center mb-6">
-                <h3 className="text-lg font-bold text-gray-800">Expenses by Category</h3>
+            <div className="flex justify-between items-center mb-4">
+                <h3 className="text-base font-bold text-white">Category Analysis</h3>
 
-                {/* Dropdown changes the 'timeframe' state when clicked */}
                 <select
                     value={timeframe}
                     onChange={(e) => setTimeframe(e.target.value)}
-                    className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 outline-none"
+                    className="bg-[#1a1f2e] border border-gray-700 text-gray-300 text-xs rounded-lg focus:ring-blue-500/50 focus:border-blue-500/50 p-1.5 outline-none cursor-pointer"
                 >
                     <option value="Daily">Daily</option>
                     <option value="Weekly">Weekly</option>
@@ -59,35 +71,58 @@ const CategoryPieChart = () => {
                 </select>
             </div>
 
-            {/* Chart Section */}
-            <div className="flex-1 w-full min-h-[250px]">
-                {/* ResponsiveContainer ensures the chart shrinks and grows with the flexbox */}
-                <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                        <Pie
-                            data={activeData}
-                            cx="50%" // Center X
-                            cy="50%" // Center Y
-                            innerRadius={60} // Creates the "Donut" hole
-                            outerRadius={80} // Outer size
-                            paddingAngle={5} // Space between slices
-                            dataKey="value" // Which property holds the number
-                        >
-                            {/* Map through data to assign a specific color to each slice */}
-                            {activeData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                            ))}
-                        </Pie>
+            {/* Chart + Legend Layout */}
+            <div className="flex-1 flex flex-col items-center">
+                {/* Donut Chart with center label */}
+                <div className="relative w-full" style={{ height: '180px' }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                            <Pie
+                                data={activeData}
+                                cx="50%"
+                                cy="50%"
+                                innerRadius={55}
+                                outerRadius={80}
+                                paddingAngle={3}
+                                dataKey="value"
+                                stroke="none"
+                            >
+                                {activeData.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                ))}
+                            </Pie>
+                            <Tooltip content={<CustomTooltip />} />
+                        </PieChart>
+                    </ResponsiveContainer>
 
-                        {/* Built-in Tooltip shows values when hovering over slices */}
-                        <Tooltip
-                            formatter={(value) => `$${value}`} // Formats the tooltip number as currency
-                        />
+                    {/* Center Label */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                        <span className="text-lg font-bold text-white">₹{total.toLocaleString('en-IN')}</span>
+                        <span className="text-[10px] text-gray-500">Total</span>
+                    </div>
+                </div>
 
-                        {/* Built-in Legend shows the color key below the chart */}
-                        <Legend verticalAlign="bottom" height={36} />
-                    </PieChart>
-                </ResponsiveContainer>
+                {/* Legend List */}
+                <div className="w-full mt-3 space-y-2">
+                    {activeData.map((item, index) => {
+                        const percentage = ((item.value / total) * 100).toFixed(1);
+                        return (
+                            <div key={item.name} className="flex items-center justify-between text-xs">
+                                <div className="flex items-center gap-2">
+                                    <span
+                                        className="w-2.5 h-2.5 rounded-full shrink-0"
+                                        style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                                    />
+                                    <span className="text-gray-300">{item.name}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-white font-medium">₹{item.value.toLocaleString('en-IN')}</span>
+                                    <span className="text-gray-500 w-12 text-right">({percentage}%)</span>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
 
         </div>

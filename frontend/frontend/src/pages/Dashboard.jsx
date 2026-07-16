@@ -1,70 +1,75 @@
 import React from 'react';
 
-// Import our assembled sections
-import WelcomeBanner from '../components/dashboard/WelcomeBanner';
-import BalanceSection from '../components/dashboard/BalanceSection';
+// Import our components
+import BalanceCard from '../components/dashboard/BalanceCard';
+import AddFundsCard from '../components/dashboard/AddFundsCard';
 import CategoryPieChart from '../components/dashboard/CategoryPieChart';
 import ExpenseTrendSection from '../components/dashboard/ExpenseTrendSection';
 import RecentExpenses from '../components/dashboard/RecentExpenses';
 
-/**
- * Dashboard Page Component
- * 
- * The main landing page of the application. 
- * It acts as the "Smart Container" that will eventually fetch data from 
- * the FastAPI backend and distribute it down to the UI components.
- */
 const Dashboard = () => {
-    // =========================================================================
-    // DUMMY BACKEND STATE
-    // In the future, this is where you will write your `useEffect` hooks 
-    // to fetch data from FastAPI and store it in React state using `useState`.
-    // =========================================================================
-
+    // Restore our mock data
     const mockUserData = {
-        username: "Alex",
-        currentBalance: 4250.50,
-        initialBalance: 5000.00
+        username: "Sudarshan",
+        currentBalance: 42560.50,
+        initialBalance: 50000.00,
+        totalExpenses: 7439.50
     };
 
-    // Dummy handler for the "Add Funds" button
     const handleAddFunds = () => {
-        alert("In the future, this will open a modal to add income!");
+        alert("Add funds modal will open here!");
     };
 
-    // =========================================================================
-    // RENDER LAYOUT
-    // =========================================================================
     return (
-        <div className="space-y-6 max-w-7xl mx-auto">
+        <div className="space-y-6 max-w-[1600px] mx-auto text-white">
 
-            {/* SECTION 1: Welcome Banner */}
-            <WelcomeBanner username={mockUserData.username} />
+            {/* HEADER */}
+            <div>
+                <h1 className="text-2xl font-bold">Welcome back, {mockUserData.username} 👋</h1>
+                <p className="text-sm text-gray-400 mt-1">Here's what's happening with your finances today.</p>
+            </div>
 
-            {/* SECTION 2: Top Grid (Balances on Left, Pie Chart on Right) */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* ROW 1: 4 Metric Cards (evenly spaced) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <BalanceCard
+                    title="Current Balance"
+                    amount={mockUserData.currentBalance}
+                    icon="💰"
+                    trend={{ value: 12.5, isPositive: true }}
+                />
+                <BalanceCard
+                    title="Initial Balance"
+                    amount={mockUserData.initialBalance}
+                    icon="🏦"
+                />
+                <BalanceCard
+                    title="Total Expenses (May)"
+                    amount={mockUserData.totalExpenses}
+                    icon="📉"
+                    trend={{ value: 8.2, isPositive: false }}
+                />
+                <AddFundsCard onAddFundsClick={handleAddFunds} />
+            </div>
 
-                {/* Left Side: takes up 2 columns on large screens */}
-                <div className="lg:col-span-2">
-                    <BalanceSection
-                        currentBalance={mockUserData.currentBalance}
-                        initialBalance={mockUserData.initialBalance}
-                        onAddFunds={handleAddFunds}
-                    />
+            {/* ROW 2: Charts and Lists (12-column grid for precise width control) */}
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
+
+                {/* Expense Trend (Takes up roughly 50% of the screen) */}
+                <div className="xl:col-span-6 bg-[#151a23] rounded-xl border border-gray-800 p-4">
+                    <ExpenseTrendSection />
                 </div>
 
-                {/* Right Side: takes up 1 column on large screens */}
-                <div className="lg:col-span-1">
+                {/* Category Analysis (Takes up roughly 25% of the screen) */}
+                <div className="xl:col-span-3 bg-[#151a23] rounded-xl border border-gray-800 p-4">
                     <CategoryPieChart />
                 </div>
 
+                {/* Recent Expenses (Takes up roughly 25% of the screen) */}
+                <div className="xl:col-span-3 bg-[#151a23] rounded-xl border border-gray-800 p-4">
+                    <RecentExpenses />
+                </div>
+
             </div>
-
-            {/* SECTION 3: Trend Chart */}
-            <ExpenseTrendSection />
-
-            {/* SECTION 4: Recent Expenses Table */}
-            <RecentExpenses />
 
         </div>
     );

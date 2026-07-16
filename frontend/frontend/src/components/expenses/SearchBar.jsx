@@ -10,10 +10,10 @@ const SearchBar = ({ searchTerm, onSearchChange, placeholder = "Search expenses.
     return (
         <div className="relative w-full sm:max-w-xs">
 
-            {/* Search Icon positioned absolutely inside the input field */}
+            {/* Search Icon */}
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg
-                    className="h-5 w-5 text-gray-400"
+                    className="h-4 w-4 text-gray-500"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -33,14 +33,14 @@ const SearchBar = ({ searchTerm, onSearchChange, placeholder = "Search expenses.
                 value={searchTerm}
                 onChange={(e) => onSearchChange(e.target.value)}
                 placeholder={placeholder}
-                className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg text-sm bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                className="block w-full pl-9 pr-8 py-2 bg-[#1a1f2e] border border-gray-700/50 rounded-lg text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
             />
 
-            {/* Clear Button (only shows if there is text typed) */}
+            {/* Clear Button */}
             {searchTerm && (
                 <button
                     onClick={() => onSearchChange('')}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-300 transition-colors"
                     aria-label="Clear search"
                 >
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -42,16 +42,16 @@ const ExpenseTrendSection = () => {
     };
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div>
 
             {/* Top Header Row: Title and Controls */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 space-y-3 sm:space-y-0">
 
                 {/* Section Title */}
-                <h2 className="text-lg font-bold text-gray-800">Expense Trends</h2>
+                <h2 className="text-base font-bold text-white">Expense Trend</h2>
 
                 {/* Controls Container */}
-                <div className="flex flex-col-reverse sm:flex-row items-start sm:items-center gap-4">
+                <div className="flex flex-col-reverse sm:flex-row items-start sm:items-center gap-3">
 
                     {/* Left/Right Date Navigation */}
                     <DateNavigator

@@ -3,107 +3,81 @@ import React from 'react';
 /**
  * RecentExpenses Component
  * 
- * Displays a lightweight table of the 5 most recent transactions.
- * Designed to fit within the dashboard layout without overwhelming the user.
+ * Displays a lightweight list of the 5 most recent transactions.
+ * Designed as a card-list layout matching the reference design.
  */
 const RecentExpenses = () => {
-    // DUMMY DATA: Hardcoded recent transactions for the UI.
-    // In a real app, this would be passed down as a prop (e.g., `expenses`).
+    // DUMMY DATA
     const recentTransactions = [
-        { id: 1, name: 'Uber to Airport', amount: 45.50, category: 'Transport', date: '2026-07-06' },
-        { id: 2, name: 'Whole Foods Market', amount: 120.00, category: 'Food', date: '2026-07-05' },
-        { id: 3, name: 'Netflix Subscription', amount: 15.99, category: 'Entertainment', date: '2026-07-04' },
-        { id: 4, name: 'Electric Bill', amount: 85.00, category: 'Utilities', date: '2026-07-02' },
-        { id: 5, name: 'Coffee Shop', amount: 5.50, category: 'Food', date: '2026-07-01' },
+        { id: 1, name: 'Starbucks Coffee', amount: 350.00, category: 'Food & Dining', date: '2026-05-21' },
+        { id: 2, name: 'Uber Ride', amount: 210.75, category: 'Transport', date: '2026-05-21' },
+        { id: 3, name: 'Amazon Purchase', amount: 1299.00, category: 'Shopping', date: '2026-05-20' },
+        { id: 4, name: 'Netflix Subscription', amount: 649.00, category: 'Entertainment', date: '2026-05-19' },
+        { id: 5, name: 'Electricity Bill', amount: 850.00, category: 'Utilities', date: '2026-05-19' },
     ];
 
     // Helper function to format currency
     const formatCurrency = (amount) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-        }).format(amount);
+        return `₹${amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
     };
 
-    // Helper function to map categories to specific colored badges
-    const getCategoryBadge = (category) => {
-        const badges = {
-            Transport: 'bg-orange-100 text-orange-800',
-            Food: 'bg-emerald-100 text-emerald-800',
-            Entertainment: 'bg-purple-100 text-purple-800',
-            Utilities: 'bg-blue-100 text-blue-800',
-            Default: 'bg-gray-100 text-gray-800',
+    // Helper to get category icon + color
+    const getCategoryStyle = (category) => {
+        const styles = {
+            'Food & Dining': { bg: 'bg-emerald-500/15', text: 'text-emerald-400', icon: '🍽️' },
+            'Transport': { bg: 'bg-blue-500/15', text: 'text-blue-400', icon: '🚗' },
+            'Shopping': { bg: 'bg-purple-500/15', text: 'text-purple-400', icon: '🛒' },
+            'Entertainment': { bg: 'bg-orange-500/15', text: 'text-orange-400', icon: '🎬' },
+            'Utilities': { bg: 'bg-yellow-500/15', text: 'text-yellow-400', icon: '⚡' },
         };
-        const badgeClass = badges[category] || badges.Default;
-
-        return (
-            <span className={`px-2.5 py-1 text-xs font-medium rounded-full ${badgeClass}`}>
-                {category}
-            </span>
-        );
+        return styles[category] || { bg: 'bg-gray-500/15', text: 'text-gray-400', icon: '📦' };
     };
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="h-full flex flex-col">
 
             {/* Header Area */}
-            <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center">
-                <h2 className="text-lg font-bold text-gray-800">Recent Expenses</h2>
-                {/* A link that would ideally navigate to the full expenses page */}
-                <button className="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors">
-                    View All →
+            <div className="flex justify-between items-center mb-4">
+                <h2 className="text-base font-bold text-white">Recent Expenses</h2>
+                <button className="text-xs font-medium text-blue-400 hover:text-blue-300 transition-colors">
+                    View All
                 </button>
             </div>
 
-            {/* Table Container - overflow-x-auto allows horizontal scrolling on smaller desktop windows */}
-            <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
+            {/* Transaction List */}
+            <div className="flex-1 space-y-1">
+                {recentTransactions.map((transaction) => {
+                    const style = getCategoryStyle(transaction.category);
+                    return (
+                        <div
+                            key={transaction.id}
+                            className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/[0.03] transition-colors cursor-pointer"
+                        >
+                            {/* Category Icon */}
+                            <div className={`w-9 h-9 rounded-lg ${style.bg} flex items-center justify-center text-sm shrink-0`}>
+                                {style.icon}
+                            </div>
 
-                    {/* Table Header */}
-                    <thead>
-                        <tr className="bg-gray-50/50 text-gray-500 text-xs uppercase tracking-wider">
-                            <th className="px-6 py-3 font-medium">Transaction Name</th>
-                            <th className="px-6 py-3 font-medium">Category</th>
-                            <th className="px-6 py-3 font-medium">Date</th>
-                            <th className="px-6 py-3 font-medium text-right">Amount</th>
-                        </tr>
-                    </thead>
+                            {/* Name + Category */}
+                            <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-white truncate">{transaction.name}</p>
+                                <p className={`text-[11px] ${style.text}`}>{transaction.category}</p>
+                            </div>
 
-                    {/* Table Body */}
-                    <tbody className="divide-y divide-gray-100 text-sm">
-                        {recentTransactions.map((transaction) => (
-                            <tr key={transaction.id} className="hover:bg-gray-50/50 transition-colors">
-
-                                {/* Name */}
-                                <td className="px-6 py-4 font-medium text-gray-900">
-                                    {transaction.name}
-                                </td>
-
-                                {/* Category Badge */}
-                                <td className="px-6 py-4">
-                                    {getCategoryBadge(transaction.category)}
-                                </td>
-
-                                {/* Date */}
-                                <td className="px-6 py-4 text-gray-500">
-                                    {/* Format the raw date string into a nicer format like "Jul 06, 2026" */}
+                            {/* Date + Amount */}
+                            <div className="text-right shrink-0">
+                                <p className="text-sm font-semibold text-white">{formatCurrency(transaction.amount)}</p>
+                                <p className="text-[11px] text-gray-500">
                                     {new Date(transaction.date).toLocaleDateString('en-US', {
                                         month: 'short',
                                         day: '2-digit',
                                         year: 'numeric'
                                     })}
-                                </td>
-
-                                {/* Amount */}
-                                <td className="px-6 py-4 font-semibold text-gray-900 text-right">
-                                    {formatCurrency(transaction.amount)}
-                                </td>
-
-                            </tr>
-                        ))}
-                    </tbody>
-
-                </table>
+                                </p>
+                            </div>
+                        </div>
+                    );
+                })}
             </div>
 
         </div>
