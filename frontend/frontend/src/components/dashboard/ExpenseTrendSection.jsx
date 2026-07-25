@@ -48,7 +48,7 @@ const ExpenseTrendSection = () => {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 space-y-3 sm:space-y-0">
 
                 {/* Section Title */}
-                <h2 className="text-base font-bold text-white">Expense Trend</h2>
+                <h2 className="text-base font-bold text-gray-900 dark:text-white">Expense Trend</h2>
 
                 {/* Controls Container */}
                 <div className="flex flex-col-reverse sm:flex-row items-start sm:items-center gap-3">

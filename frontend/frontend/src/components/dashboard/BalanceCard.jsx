@@ -17,7 +17,7 @@ const BalanceCard = ({ title, amount, icon, trend }) => {
     };
 
     return (
-        <div className="bg-[#151a23] rounded-xl border border-gray-800/60 p-5 flex flex-col justify-between relative overflow-hidden group hover:border-gray-700/60 transition-colors">
+        <div className="bg-white dark:bg-[#151a23] rounded-xl border border-gray-100 dark:border-gray-800/60 p-5 flex flex-col justify-between relative overflow-hidden group shadow-sm hover:shadow transition-all">
 
             {/* Decorative sparkline wave */}
             <div className="absolute top-3 right-3 opacity-30 group-hover:opacity-50 transition-opacity">
@@ -29,7 +29,7 @@ const BalanceCard = ({ title, amount, icon, trend }) => {
 
             <div className="flex justify-between items-start">
                 {/* Title */}
-                <h3 className="text-sm font-medium text-gray-400">{title}</h3>
+                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">{title}</h3>
 
                 {/* Optional Icon */}
                 {icon && (
@@ -41,7 +41,7 @@ const BalanceCard = ({ title, amount, icon, trend }) => {
 
             {/* Main Amount */}
             <div className="mt-3">
-                <span className="text-2xl font-bold text-white">
+                <span className="text-2xl font-bold text-gray-900 dark:text-white">
                     {formatCurrency(amount)}
                 </span>
             </div>

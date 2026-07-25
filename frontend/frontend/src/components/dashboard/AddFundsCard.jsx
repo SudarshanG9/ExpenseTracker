@@ -8,7 +8,7 @@ import React from 'react';
  */
 const AddFundsCard = ({ onAddFundsClick }) => {
     return (
-        <div className="bg-[#151a23] rounded-xl border border-gray-800/60 p-5 flex items-center gap-4 group hover:border-gray-700/60 transition-colors">
+        <div className="bg-white dark:bg-[#151a23] rounded-xl border border-gray-100 dark:border-gray-800/60 p-5 flex items-center gap-4 group shadow-sm hover:shadow transition-all">
 
             {/* Large Plus Icon */}
             <div className="w-12 h-12 rounded-full bg-blue-500/15 flex items-center justify-center shrink-0 group-hover:bg-blue-500/25 transition-colors">
@@ -19,7 +19,7 @@ const AddFundsCard = ({ onAddFundsClick }) => {
 
             {/* Text + Button */}
             <div className="flex-1 min-w-0">
-                <h3 className="text-sm font-semibold text-white">Add Funds</h3>
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Add Funds</h3>
                 <p className="text-xs text-gray-500 mt-0.5">Increase your balance</p>
                 <button
                     onClick={onAddFundsClick}

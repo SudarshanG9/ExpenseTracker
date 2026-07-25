@@ -21,12 +21,12 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="space-y-6 max-w-[1600px] mx-auto text-white">
+        <div className="space-y-6 max-w-[1600px] mx-auto text-gray-900 dark:text-white transition-colors duration-300">
 
             {/* HEADER */}
             <div>
-                <h1 className="text-2xl font-bold">Welcome back, {mockUserData.username} 👋</h1>
-                <p className="text-sm text-gray-400 mt-1">Here's what's happening with your finances today.</p>
+                <h1 className="text-3xl font-bold">Hello {mockUserData.username},</h1>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Take a look at your current balance <span role="img" aria-label="eyes">👀</span></p>
             </div>
 
             {/* ROW 1: 4 Metric Cards (evenly spaced) */}
@@ -55,17 +55,17 @@ const Dashboard = () => {
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
 
                 {/* Expense Trend (Takes up roughly 50% of the screen) */}
-                <div className="xl:col-span-6 bg-[#151a23] rounded-xl border border-gray-800 p-4">
+                <div className="xl:col-span-6 bg-white dark:bg-[#151a23] rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-4 transition-colors">
                     <ExpenseTrendSection />
                 </div>
 
                 {/* Category Analysis (Takes up roughly 25% of the screen) */}
-                <div className="xl:col-span-3 bg-[#151a23] rounded-xl border border-gray-800 p-4">
+                <div className="xl:col-span-3 bg-white dark:bg-[#151a23] rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-4 transition-colors">
                     <CategoryPieChart />
                 </div>
 
                 {/* Recent Expenses (Takes up roughly 25% of the screen) */}
-                <div className="xl:col-span-3 bg-[#151a23] rounded-xl border border-gray-800 p-4">
+                <div className="xl:col-span-3 bg-white dark:bg-[#151a23] rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-4 transition-colors">
                     <RecentExpenses />
                 </div>
 

@@ -39,11 +39,11 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
     return (
         <aside
             className={`${isCollapsed ? 'w-[72px]' : 'w-[250px]'
-                } h-full bg-[#0f1219] border-r border-gray-800/60 flex flex-col flex-shrink-0 transition-all duration-300 ease-in-out`}
+                } h-full bg-[#f4f7fe] dark:bg-[#0f1219] border-r border-gray-200 dark:border-gray-800/60 flex flex-col flex-shrink-0 transition-all duration-300 ease-in-out`}
         >
 
             {/* Logo / Branding */}
-            <div className={`flex items-center h-16 border-b border-gray-800/60 shrink-0 ${isCollapsed ? 'justify-center px-2' : 'px-5'}`}>
+            <div className={`flex items-center h-16 border-b border-gray-200 dark:border-gray-800/60 shrink-0 ${isCollapsed ? 'justify-center px-2' : 'px-5'}`}>
                 {/* Gradient Logo Icon */}
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center shrink-0">
                     <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -52,7 +52,7 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
                 </div>
                 {!isCollapsed && (
                     <div className="ml-3 overflow-hidden">
-                        <span className="text-base font-bold text-white tracking-wide">EXPENSE</span>
+                        <span className="text-base font-bold text-gray-900 dark:text-white tracking-wide">EXPENSE</span>
                         <span className="block text-[10px] text-gray-500 tracking-[0.2em] uppercase -mt-0.5">Tracker</span>
                     </div>
                 )}
@@ -69,7 +69,7 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
                             `flex items-center gap-3 py-2.5 rounded-lg transition-all duration-200 group ${isCollapsed ? 'justify-center px-0' : 'px-3'
                             } ${isActive
                                 ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
-                                : 'text-gray-400 hover:text-white hover:bg-white/[0.04]'
+                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-white/[0.04]'
                             }`
                         }
                     >

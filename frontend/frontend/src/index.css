@@ -1,11 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
+@variant dark (&:where(.dark, .dark *));
 
 /* ===== Base Styles ===== */
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: #0b0e14;
-  color: #ffffff;
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

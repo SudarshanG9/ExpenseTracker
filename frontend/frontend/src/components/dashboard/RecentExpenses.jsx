@@ -38,7 +38,7 @@ const RecentExpenses = () => {
 
             {/* Header Area */}
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-base font-bold text-white">Recent Expenses</h2>
+                <h2 className="text-base font-bold text-gray-900 dark:text-white">Recent Expenses</h2>
                 <button className="text-xs font-medium text-blue-400 hover:text-blue-300 transition-colors">
                     View All
                 </button>
@@ -51,7 +51,7 @@ const RecentExpenses = () => {
                     return (
                         <div
                             key={transaction.id}
-                            className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/[0.03] transition-colors cursor-pointer"
+                            className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-gray-50 dark:hover:bg-white/[0.03] transition-colors cursor-pointer"
                         >
                             {/* Category Icon */}
                             <div className={`w-9 h-9 rounded-lg ${style.bg} flex items-center justify-center text-sm shrink-0`}>
@@ -60,14 +60,14 @@ const RecentExpenses = () => {
 
                             {/* Name + Category */}
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-white truncate">{transaction.name}</p>
+                                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{transaction.name}</p>
                                 <p className={`text-[11px] ${style.text}`}>{transaction.category}</p>
                             </div>
 
                             {/* Date + Amount */}
                             <div className="text-right shrink-0">
-                                <p className="text-sm font-semibold text-white">{formatCurrency(transaction.amount)}</p>
-                                <p className="text-[11px] text-gray-500">
+                                <p className="text-sm font-semibold text-gray-900 dark:text-white">{formatCurrency(transaction.amount)}</p>
+                                <p className="text-[11px] text-gray-500 dark:text-gray-400">
                                     {new Date(transaction.date).toLocaleDateString('en-US', {
                                         month: 'short',
                                         day: '2-digit',

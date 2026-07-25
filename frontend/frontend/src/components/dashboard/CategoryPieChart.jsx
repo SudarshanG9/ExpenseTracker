@@ -44,9 +44,9 @@ const CategoryPieChart = () => {
     const CustomTooltip = ({ active, payload }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="bg-[#1a1f2e] border border-gray-700 rounded-lg px-3 py-2 shadow-xl">
-                    <p className="text-xs text-gray-400">{payload[0].name}</p>
-                    <p className="text-sm font-semibold text-white">₹{payload[0].value.toLocaleString('en-IN')}</p>
+                <div className="bg-white dark:bg-[#1a1f2e] border border-gray-100 dark:border-gray-700 rounded-lg px-3 py-2 shadow-xl">
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{payload[0].name}</p>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">₹{payload[0].value.toLocaleString('en-IN')}</p>
                 </div>
             );
         }
@@ -58,12 +58,12 @@ const CategoryPieChart = () => {
 
             {/* Header section with Title and Dropdown */}
             <div className="flex justify-between items-center mb-4">
-                <h3 className="text-base font-bold text-white">Category Analysis</h3>
+                <h3 className="text-base font-bold text-gray-900 dark:text-white">Category Analysis</h3>
 
                 <select
                     value={timeframe}
                     onChange={(e) => setTimeframe(e.target.value)}
-                    className="bg-[#1a1f2e] border border-gray-700 text-gray-300 text-xs rounded-lg focus:ring-blue-500/50 focus:border-blue-500/50 p-1.5 outline-none cursor-pointer"
+                    className="bg-gray-50 dark:bg-[#1a1f2e] border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-xs rounded-lg focus:ring-blue-500/50 focus:border-blue-500/50 p-1.5 outline-none cursor-pointer"
                 >
                     <option value="Daily">Daily</option>
                     <option value="Weekly">Weekly</option>
@@ -97,8 +97,8 @@ const CategoryPieChart = () => {
 
                     {/* Center Label */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                        <span className="text-lg font-bold text-white">₹{total.toLocaleString('en-IN')}</span>
-                        <span className="text-[10px] text-gray-500">Total</span>
+                        <span className="text-lg font-bold text-gray-900 dark:text-white">₹{total.toLocaleString('en-IN')}</span>
+                        <span className="text-[10px] text-gray-500 dark:text-gray-400">Total</span>
                     </div>
                 </div>
 
@@ -113,11 +113,11 @@ const CategoryPieChart = () => {
                                         className="w-2.5 h-2.5 rounded-full shrink-0"
                                         style={{ backgroundColor: COLORS[index % COLORS.length] }}
                                     />
-                                    <span className="text-gray-300">{item.name}</span>
+                                    <span className="text-gray-700 dark:text-gray-300">{item.name}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <span className="text-white font-medium">₹{item.value.toLocaleString('en-IN')}</span>
-                                    <span className="text-gray-500 w-12 text-right">({percentage}%)</span>
+                                    <span className="text-gray-900 dark:text-white font-medium">₹{item.value.toLocaleString('en-IN')}</span>
+                                    <span className="text-gray-500 dark:text-gray-400 w-12 text-right">({percentage}%)</span>
                                 </div>
                             </div>
                         );
