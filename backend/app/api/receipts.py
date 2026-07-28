@@ -1,6 +1,4 @@
 from fastapi import APIRouter,UploadFile, File, Depends, HTTPException
-from sqlalchemy.orm import Session
-from app.database import get_db
 from app.services.receipts_service import ocr
 import os
 import shutil
@@ -10,8 +8,7 @@ router = APIRouter(prefix="/receipts", tags=["receipts"])
 
 @router.post("/scan")
 async def scan_receipt(
-    file: UploadFile = File(...),
-    db: Session = Depends(get_db)
+    file: UploadFile = File(...)
 ):
     if not file.filename.lower().endswith((".png", ".jpg", ".jpeg")):
         raise HTTPException(status_code=400, detail="Invalid file format")
@@ -23,6 +20,6 @@ async def scan_receipt(
     with open(file_path, "wb") as f:
         shutil.copyfileobj(file.file, f)
 
-    expenses = ocr(file_path, db)
+    expenses = ocr(file_path)
 
     return {"message": "Receipt scanned successfully", "expenses": expenses}

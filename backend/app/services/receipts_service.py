@@ -4,9 +4,7 @@ import re
 from datetime import datetime
 
 
-from app.services.expense_service import create_expense
-from sqlalchemy.orm import Session
-from app.schemas.expense import ExpenseCreate
+
 
 
 
@@ -77,37 +75,30 @@ def classify_category(text: str):
     return "Misc"
 
     
-def ocr(image_path: str, db: Session):
+def ocr(image_path: str):
     text = extract_text(image_path)
     products = extract_product(text)
     total = extract_total(text)
-    date = extract_date(text)
+    date_obj = extract_date(text)
 
-    expenses = []
+    final_amount = 0.0
+    final_name = "Receipt"
+    
+    if total:
+        final_amount = total
+    elif products:
+        final_amount = sum(p["price"] for p in products)
+        if len(products) == 1:
+            final_name = products[0]["name"]
+        else:
+            final_name = f"Receipt ({len(products)} items)"
 
-    if products:
-        for product in products:
-            expense_record = ExpenseCreate(
-                title=product["name"],
-                amount=product["price"],
-                category=classify_category(product["name"]),
-                date=date or datetime.now().date(),
-                description="",
-                receipt_url=image_path
-            )
-            expense = create_expense(db, expense_record)
-            expenses.append(expense)
-    elif total:
-        expense_record = ExpenseCreate(
-            title="Receipt",
-            amount=total,
-            category=classify_category(text),
-            date=date or datetime.now().date(),
-            description="",
-            receipt_url=image_path
-        )
-        expense = create_expense(db, expense_record)
-        expenses.append(expense)
+    date_str = date_obj.strftime("%Y-%m-%d") if date_obj else ""
 
-    return expenses
+    return {
+        "name": final_name,
+        "amount": final_amount,
+        "date": date_str,
+        "category": classify_category(text)
+    }
 
