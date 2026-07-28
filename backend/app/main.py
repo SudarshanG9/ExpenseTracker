@@ -1,14 +1,15 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import expenses, receipts
+from app.api import expenses, receipts, user
 from app.database import create_tables
 import app.models.expense  # ensure model is registered with Base
+import app.models.user
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -20,6 +21,7 @@ create_tables()
 # Routers already define their own prefix, so no prefix needed here
 app.include_router(expenses.router)
 app.include_router(receipts.router)
+app.include_router(user.router)
 
 
 @app.get("/")
