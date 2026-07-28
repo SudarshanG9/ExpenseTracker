@@ -1,26 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ThresholdForm from '../components/settings/ThresholdForm';
 import NotificationSettings from '../components/settings/NotificationSettings';
 import ThemeSwitcher from '../components/settings/ThemeSwitcher';
+import { userAPI } from '../services/api';
 
 const Settings = () => {
     // Profile State
     const [isEditingProfile, setIsEditingProfile] = useState(false);
     const [profile, setProfile] = useState({
-        name: 'Developer',
-        email: 'developer@example.com'
+        name: '',
+        email: '',
+        initial_balance: 0
     });
+    const [loading, setLoading] = useState(true);
 
-    const handleProfileSave = (e) => {
+    useEffect(() => {
+        const loadProfile = async () => {
+            try {
+                const data = await userAPI.getProfile();
+                setProfile(data);
+            } catch (err) {
+                console.error("Failed to load profile:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadProfile();
+    }, []);
+
+    const handleProfileSave = async (e) => {
         e.preventDefault();
-        setIsEditingProfile(false);
-        // Future: Dispatch updated profile to backend
+        try {
+            const updated = await userAPI.updateProfile(profile);
+            setProfile(updated);
+            setIsEditingProfile(false);
+        } catch (err) {
+            console.error("Failed to update profile:", err);
+            alert("Failed to update profile.");
+        }
     };
 
     const handleLogout = () => {
         console.log("User triggered logout sequence.");
         alert("Logout triggered. Authentication module pending.");
     };
+
+    if (loading) return <div>Loading settings...</div>;
 
     return (
         <div className="h-full max-w-[800px] mx-auto p-4 md:p-6 transition-colors duration-200">
@@ -65,6 +90,17 @@ const Settings = () => {
                                             type="email"
                                             value={profile.email}
                                             onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                                            required
+                                            className="w-full bg-gray-50 dark:bg-[#0b0e14] border border-gray-300 dark:border-gray-700 rounded-lg p-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-purple-500 transition-colors"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">Initial Balance</label>
+                                        <input
+                                            type="number"
+                                            step="0.01"
+                                            value={profile.initial_balance}
+                                            onChange={(e) => setProfile({ ...profile, initial_balance: parseFloat(e.target.value) })}
                                             required
                                             className="w-full bg-gray-50 dark:bg-[#0b0e14] border border-gray-300 dark:border-gray-700 rounded-lg p-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-purple-500 transition-colors"
                                         />

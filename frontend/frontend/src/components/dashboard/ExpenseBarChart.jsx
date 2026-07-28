@@ -16,35 +16,35 @@ import {
  * It dynamically switches its dataset based on the `timeframe` prop 
  * (Daily, Weekly, or Monthly).
  */
-const ExpenseBarChart = ({ timeframe = 'Monthly' }) => {
-    // DUMMY DATA: Hardcoded datasets to visualize the UI.
-    const dummyData = {
-        Daily: [
-            { label: 'Mon', amount: 450 },
-            { label: 'Tue', amount: 1200 },
-            { label: 'Wed', amount: 300 },
-            { label: 'Thu', amount: 800 },
-            { label: 'Fri', amount: 1850 },
-            { label: 'Sat', amount: 600 },
-            { label: 'Sun', amount: 900 },
-        ],
-        Weekly: [
-            { label: 'Week 1', amount: 4500 },
-            { label: 'Week 2', amount: 3200 },
-            { label: 'Week 3', amount: 5000 },
-            { label: 'Week 4', amount: 2800 },
-        ],
-        Monthly: [
-            { label: 'Jan', amount: 1200 },
-            { label: 'Feb', amount: 1500 },
-            { label: 'Mar', amount: 1100 },
-            { label: 'Apr', amount: 1800 },
-            { label: 'May', amount: 1300 },
-            { label: 'Jun', amount: 1600 },
-        ]
-    };
-
-    const activeData = dummyData[timeframe] || dummyData.Monthly;
+const ExpenseBarChart = ({ timeframe = 'Monthly', expenses = [] }) => {
+    
+    // Simple dynamic aggregation based on the raw date strings (YYYY-MM-DD).
+    let activeData = [];
+    
+    if (timeframe === 'Monthly') {
+        const monthlyTotals = expenses.reduce((acc, exp) => {
+            const month = exp.date ? exp.date.substring(0, 7) : 'Unknown'; // e.g. 2026-05
+            acc[month] = (acc[month] || 0) + (Number(exp.amount) || 0);
+            return acc;
+        }, {});
+        
+        activeData = Object.keys(monthlyTotals).sort().map(month => ({
+            label: month,
+            amount: monthlyTotals[month]
+        }));
+    } else {
+        // Fallback for Daily/Weekly: Just group by exact Date for now
+        const dailyTotals = expenses.reduce((acc, exp) => {
+            const day = exp.date || 'Unknown';
+            acc[day] = (acc[day] || 0) + (Number(exp.amount) || 0);
+            return acc;
+        }, {});
+        
+        activeData = Object.keys(dailyTotals).sort().map(day => ({
+            label: day,
+            amount: dailyTotals[day]
+        }));
+    }
 
     const formatCurrency = (value) => `₹${value.toLocaleString('en-IN')}`;
 

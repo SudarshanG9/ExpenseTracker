@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Import our components
 import BalanceCard from '../components/dashboard/BalanceCard';
@@ -7,13 +7,46 @@ import CategoryPieChart from '../components/dashboard/CategoryPieChart';
 import ExpenseTrendSection from '../components/dashboard/ExpenseTrendSection';
 import RecentExpenses from '../components/dashboard/RecentExpenses';
 
+import { expenseAPI, userAPI } from '../services/api'
 const Dashboard = () => {
-    // Restore our mock data
-    const mockUserData = {
-        username: "Sudarshan",
-        currentBalance: 42560.50,
-        initialBalance: 50000.00,
-        totalExpenses: 7439.50
+
+    //Setting up react state
+
+    const [expenses, setExpenses] = useState([]);
+    const [userProfile, setUserProfile] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    //Fetch data on component
+
+    useEffect(() => {
+        const loadDashboardData = async () => {
+            try {
+                const [expData, usrData] = await Promise.all([
+                    expenseAPI.getAll(),
+                    userAPI.getProfile()
+                ]);
+                setExpenses(expData);
+                setUserProfile(usrData);
+            } catch (error) {
+                console.error("Failed to fetch dashboard data:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadDashboardData();
+    }, []);
+
+    if (loading || !userProfile) return <div>Loading dashboard...</div>;
+    // Calculate dynamic data based on fetched expenses
+    const initialBalance = userProfile.initial_balance; // Now dynamically loaded!
+    const totalExpenses = expenses.reduce((sum, exp) => sum + (Number(exp.amount) || 0), 0);
+    const currentBalance = initialBalance - totalExpenses;
+
+    const userData = {
+        username: userProfile.name,
+        currentBalance,
+        initialBalance,
+        totalExpenses
     };
 
     const handleAddFunds = () => {
@@ -25,7 +58,7 @@ const Dashboard = () => {
 
             {/* HEADER */}
             <div>
-                <h1 className="text-3xl font-bold">Hello {mockUserData.username},</h1>
+                <h1 className="text-3xl font-bold">Hello {userData.username},</h1>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Take a look at your current balance <span role="img" aria-label="eyes">👀</span></p>
             </div>
 
@@ -33,18 +66,18 @@ const Dashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <BalanceCard
                     title="Current Balance"
-                    amount={mockUserData.currentBalance}
+                    amount={userData.currentBalance}
                     icon="💰"
                     trend={{ value: 12.5, isPositive: true }}
                 />
                 <BalanceCard
                     title="Initial Balance"
-                    amount={mockUserData.initialBalance}
+                    amount={userData.initialBalance}
                     icon="🏦"
                 />
                 <BalanceCard
-                    title="Total Expenses (May)"
-                    amount={mockUserData.totalExpenses}
+                    title="Total Expenses"
+                    amount={userData.totalExpenses}
                     icon="📉"
                     trend={{ value: 8.2, isPositive: false }}
                 />
@@ -56,17 +89,17 @@ const Dashboard = () => {
 
                 {/* Expense Trend (Takes up roughly 50% of the screen) */}
                 <div className="xl:col-span-6 bg-white dark:bg-[#151a23] rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-4 transition-colors">
-                    <ExpenseTrendSection />
+                    <ExpenseTrendSection expenses={expenses} />
                 </div>
 
                 {/* Category Analysis (Takes up roughly 25% of the screen) */}
                 <div className="xl:col-span-3 bg-white dark:bg-[#151a23] rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-4 transition-colors">
-                    <CategoryPieChart />
+                    <CategoryPieChart expenses={expenses} />
                 </div>
 
                 {/* Recent Expenses (Takes up roughly 25% of the screen) */}
                 <div className="xl:col-span-3 bg-white dark:bg-[#151a23] rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-4 transition-colors">
-                    <RecentExpenses />
+                    <RecentExpenses expenses={expenses} />
                 </div>
 
             </div>

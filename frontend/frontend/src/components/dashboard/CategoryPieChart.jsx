@@ -7,34 +7,23 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
  * Displays a visual breakdown of expenses by category using a donut chart.
  * It includes a dropdown to filter the data by timeframe (Daily, Weekly, Monthly).
  */
-const CategoryPieChart = () => {
+const CategoryPieChart = ({ expenses = [] }) => {
     // 1. STATE LIVES HERE: To control the active timeframe filter
     const [timeframe, setTimeframe] = useState('Monthly');
 
-    // 2. DUMMY DATA
-    const dummyData = {
-        Daily: [
-            { name: 'Food & Dining', value: 250 },
-            { name: 'Transport', value: 150 },
-            { name: 'Coffee', value: 50 },
-        ],
-        Weekly: [
-            { name: 'Food & Dining', value: 1500 },
-            { name: 'Transport', value: 600 },
-            { name: 'Shopping', value: 1200 },
-            { name: 'Entertainment', value: 400 },
-        ],
-        Monthly: [
-            { name: 'Food & Dining', value: 2450 },
-            { name: 'Transport', value: 1520 },
-            { name: 'Shopping', value: 1280 },
-            { name: 'Entertainment', value: 980 },
-            { name: 'Utilities', value: 720 },
-            { name: 'Others', value: 489 },
-        ]
-    };
+    // Aggregate expenses by category
+    const categoryTotals = expenses.reduce((acc, expense) => {
+        const cat = expense.category || 'Other';
+        acc[cat] = (acc[cat] || 0) + (Number(expense.amount) || 0);
+        return acc;
+    }, {});
 
-    const activeData = dummyData[timeframe];
+    // Convert to array format expected by chart
+    const activeData = Object.keys(categoryTotals).map(key => ({
+        name: key,
+        value: categoryTotals[key]
+    })).sort((a, b) => b.value - a.value); // Sort largest to smallest
+
     const total = activeData.reduce((sum, item) => sum + item.value, 0);
 
     // Vibrant colors for the pie slices

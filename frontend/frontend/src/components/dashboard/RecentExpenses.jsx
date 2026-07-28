@@ -6,15 +6,11 @@ import React from 'react';
  * Displays a lightweight list of the 5 most recent transactions.
  * Designed as a card-list layout matching the reference design.
  */
-const RecentExpenses = () => {
-    // DUMMY DATA
-    const recentTransactions = [
-        { id: 1, name: 'Starbucks Coffee', amount: 350.00, category: 'Food & Dining', date: '2026-05-21' },
-        { id: 2, name: 'Uber Ride', amount: 210.75, category: 'Transport', date: '2026-05-21' },
-        { id: 3, name: 'Amazon Purchase', amount: 1299.00, category: 'Shopping', date: '2026-05-20' },
-        { id: 4, name: 'Netflix Subscription', amount: 649.00, category: 'Entertainment', date: '2026-05-19' },
-        { id: 5, name: 'Electricity Bill', amount: 850.00, category: 'Utilities', date: '2026-05-19' },
-    ];
+const RecentExpenses = ({ expenses = [] }) => {
+    // Sort by date descending and take top 5
+    const recentTransactions = [...expenses]
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, 5);
 
     // Helper function to format currency
     const formatCurrency = (amount) => {
@@ -58,9 +54,9 @@ const RecentExpenses = () => {
                                 {style.icon}
                             </div>
 
-                            {/* Name + Category */}
+                            {/* Title + Category */}
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{transaction.name}</p>
+                                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{transaction.title}</p>
                                 <p className={`text-[11px] ${style.text}`}>{transaction.category}</p>
                             </div>
 

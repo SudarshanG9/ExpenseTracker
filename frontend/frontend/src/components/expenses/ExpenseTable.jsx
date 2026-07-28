@@ -105,9 +105,9 @@ const ExpenseTable = ({ expenses, onDeleteExpense }) => {
                                     })}
                                 </td>
 
-                                {/* Name */}
+                                {/* Title */}
                                 <td className="px-5 py-4 whitespace-nowrap">
-                                    <span className="text-sm font-medium text-white">{expense.name}</span>
+                                    <span className="text-sm font-medium text-white">{expense.title}</span>
                                 </td>
 
                                 {/* Category */}

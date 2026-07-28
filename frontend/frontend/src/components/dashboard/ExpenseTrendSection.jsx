@@ -11,7 +11,7 @@ import ExpenseBarChart from './ExpenseBarChart';
  * The main container for the trend chart. It manages the state for the 
  * selected timeframe and passes that state down to the controls and the chart.
  */
-const ExpenseTrendSection = () => {
+const ExpenseTrendSection = ({ expenses = [] }) => {
     // 1. STATE LIVES HERE: The lowest common ancestor of the controls and the chart.
     const [timeframe, setTimeframe] = useState('Monthly');
 
@@ -71,7 +71,7 @@ const ExpenseTrendSection = () => {
 
             {/* The Visual Chart */}
             {/* We pass the timeframe state down so the chart knows which dataset to render */}
-            <ExpenseBarChart timeframe={timeframe} />
+            <ExpenseBarChart timeframe={timeframe} expenses={expenses} />
 
         </div>
     );

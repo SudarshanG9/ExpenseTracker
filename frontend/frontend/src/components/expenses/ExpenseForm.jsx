@@ -10,12 +10,12 @@ import React, { useState } from 'react';
 const ExpenseForm = ({ onSubmit, onCancel, initialData = null }) => {
     // 1. LOCAL STATE
     const [formData, setFormData] = useState({
-        name: initialData?.name || '',
+        title: initialData?.title || '',
         amount: initialData?.amount || '',
         category: initialData?.category || 'Food',
         date: initialData?.date || new Date().toISOString().split('T')[0],
         description: initialData?.description || '',
-        receiptUrl: initialData?.receiptUrl || '',
+        receipt_url: initialData?.receipt_url || '',
     });
 
     // Handle changes to any input field
@@ -45,14 +45,14 @@ const ExpenseForm = ({ onSubmit, onCancel, initialData = null }) => {
             {/* Row 1: Name and Amount */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label className="block text-xs font-medium text-gray-400 mb-1.5">Name</label>
+                    <label className="block text-xs font-medium text-gray-400 mb-1.5">Title</label>
                     <input
                         type="text"
-                        name="name"
+                        name="title"
                         required
-                        value={formData.name}
+                        value={formData.title}
                         onChange={handleChange}
-                        placeholder="Enter expense name"
+                        placeholder="Enter expense title"
                         className={inputStyles}
                     />
                 </div>
@@ -142,8 +142,8 @@ const ExpenseForm = ({ onSubmit, onCancel, initialData = null }) => {
                 <label className="block text-xs font-medium text-gray-400 mb-1.5">Receipt URL (Optional)</label>
                 <input
                     type="url"
-                    name="receiptUrl"
-                    value={formData.receiptUrl}
+                    name="receipt_url"
+                    value={formData.receipt_url}
                     onChange={handleChange}
                     placeholder="Enter receipt URL"
                     className={inputStyles}

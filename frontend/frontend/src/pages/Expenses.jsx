@@ -1,40 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Import our components
 import SearchBar from '../components/expenses/SearchBar';
 import ExpenseTable from '../components/expenses/ExpenseTable';
 import ExpenseForm from '../components/expenses/ExpenseForm';
+import { expenseAPI } from '../services/api';
 
 const Expenses = () => {
     // 1. The Master Data List
-    const [expenses, setExpenses] = useState([
-        { id: 1, name: 'Starbucks Coffee', amount: 350.00, category: 'Food', date: '2026-05-21' },
-        { id: 2, name: 'Uber Ride', amount: 210.75, category: 'Transport', date: '2026-05-21' },
-        { id: 3, name: 'Amazon Purchase', amount: 1299.00, category: 'Entertainment', date: '2026-05-20' },
-        { id: 4, name: 'Netflix Subscription', amount: 649.00, category: 'Entertainment', date: '2026-05-20' },
-        { id: 5, name: 'Electricity Bill', amount: 850.00, category: 'Utilities', date: '2026-05-19' },
-    ]);
+    const [expenses, setExpenses] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const loadExpenses = async () => {
+            try {
+                const data = await expenseAPI.getAll();
+                // Sort newest first
+                data.sort((a, b) => new Date(b.date) - new Date(a.date));
+                setExpenses(data);
+            } catch (err) {
+                console.error("Failed to load expenses:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadExpenses();
+    }, []);
 
     // 2. Search and Filter State
     const [searchQuery, setSearchQuery] = useState('');
 
     // 3. Actions
-    const handleSaveExpense = (newExpenseData) => {
-        const newExpense = {
-            ...newExpenseData,
-            id: Date.now(),
-        };
-        setExpenses((prev) => [newExpense, ...prev]);
+    const handleSaveExpense = async (newExpenseData) => {
+        try {
+            const created = await expenseAPI.create(newExpenseData);
+            setExpenses((prev) => [created, ...prev].sort((a, b) => new Date(b.date) - new Date(a.date)));
+        } catch (err) {
+            console.error("Failed to save expense:", err);
+            alert("Failed to save expense. Please check your inputs.");
+        }
     };
 
-    const handleDeleteExpense = (expenseId) => {
-        setExpenses((prev) => prev.filter(expense => expense.id !== expenseId));
+    const handleDeleteExpense = async (expenseId) => {
+        try {
+            await expenseAPI.delete(expenseId);
+            setExpenses((prev) => prev.filter(expense => expense.id !== expenseId));
+        } catch (err) {
+            console.error("Failed to delete expense:", err);
+        }
     };
 
     // 4. Derived Data
     const filteredExpenses = expenses.filter((expense) =>
-        expense.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        expense.category.toLowerCase().includes(searchQuery.toLowerCase())
+        (expense.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (expense.category || '').toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     return (
