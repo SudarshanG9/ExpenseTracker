@@ -32,15 +32,15 @@ const OCRPreview = ({ extractedData, onSave, onDiscard }) => {
     };
 
     return (
-        <div className="bg-[#151a23] rounded-xl border border-gray-800 p-6 flex flex-col md:flex-row gap-6">
+        <div className="bg-[#eef2ff] dark:bg-[#151a23] rounded-xl border border-blue-100 dark:border-gray-800 p-6 flex flex-col md:flex-row gap-6 transition-colors duration-300">
 
             {/* Left Side: The Image Preview (Static) */}
-            <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-[#0b0e14] rounded-lg border border-gray-800 p-4">
+            <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-white dark:bg-[#0b0e14] rounded-lg border border-blue-100 dark:border-gray-800 p-4 transition-colors duration-300">
                 {extractedData?.imageUrl ? (
                     <img
                         src={extractedData.imageUrl}
                         alt="Receipt Scan"
-                        className="max-h-[400px] object-contain rounded border border-gray-800"
+                        className="max-h-[400px] object-contain rounded border border-blue-100 dark:border-gray-800"
                     />
                 ) : (
                     <div className="text-gray-600 flex flex-col items-center">
@@ -54,9 +54,9 @@ const OCRPreview = ({ extractedData, onSave, onDiscard }) => {
 
             {/* Right Side: Editable Form */}
             <div className="w-full md:w-1/2">
-                <div className="mb-6 border-b border-gray-800 pb-4">
-                    <h3 className="text-lg font-bold text-white">Verify Extracted Data</h3>
-                    <p className="text-sm text-gray-400">Please review and correct any OCR errors before saving.</p>
+                <div className="mb-6 border-b border-gray-200 dark:border-gray-800 pb-4">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white">Verify Extracted Data</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Please review and correct any OCR errors before saving.</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -68,7 +68,7 @@ const OCRPreview = ({ extractedData, onSave, onDiscard }) => {
                             value={formData.name}
                             onChange={handleChange}
                             required
-                            className="w-full bg-[#0b0e14] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-purple-500 transition-colors"
+                            className="w-full bg-white dark:bg-[#0b0e14] border border-gray-300 dark:border-gray-700 rounded-lg p-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-purple-500 transition-colors"
                         />
                     </div>
 
@@ -82,7 +82,7 @@ const OCRPreview = ({ extractedData, onSave, onDiscard }) => {
                             required
                             step="0.01"
                             min="0"
-                            className="w-full bg-[#0b0e14] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-purple-500 transition-colors"
+                            className="w-full bg-white dark:bg-[#0b0e14] border border-gray-300 dark:border-gray-700 rounded-lg p-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-purple-500 transition-colors"
                         />
                     </div>
 
@@ -94,7 +94,7 @@ const OCRPreview = ({ extractedData, onSave, onDiscard }) => {
                             value={formData.date}
                             onChange={handleChange}
                             required
-                            className="w-full bg-[#0b0e14] border border-gray-700 rounded-lg p-2.5 text-white [color-scheme:dark] focus:outline-none focus:border-purple-500 transition-colors"
+                            className="w-full bg-white dark:bg-[#0b0e14] border border-gray-300 dark:border-gray-700 rounded-lg p-2.5 text-gray-900 dark:text-white [color-scheme:dark] focus:outline-none focus:border-purple-500 transition-colors"
                         />
                     </div>
 
@@ -104,7 +104,7 @@ const OCRPreview = ({ extractedData, onSave, onDiscard }) => {
                             name="category"
                             value={formData.category}
                             onChange={handleChange}
-                            className="w-full bg-[#0b0e14] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-purple-500 transition-colors"
+                            className="w-full bg-white dark:bg-[#0b0e14] border border-gray-300 dark:border-gray-700 rounded-lg p-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-purple-500 transition-colors"
                         >
                             <option value="Food">Food</option>
                             <option value="Transport">Transport</option>

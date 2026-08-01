@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 const ThemeSwitcher = () => {
-    const [theme, setTheme] = useState('dark');
+    const [theme, setTheme] = useState(() => {
+        return localStorage.getItem('theme') || 'system';
+    });
     const [isThemeOpen, setIsThemeOpen] = useState(false);
     const dropdownRef = useRef(null);
 
@@ -27,6 +29,7 @@ const ThemeSwitcher = () => {
         } else {
             root.classList.add(theme);
         }
+        localStorage.setItem('theme', theme);
     }, [theme]);
 
     return (

@@ -67,7 +67,7 @@ const ExpenseTable = ({ expenses, onDeleteExpense }) => {
 
                 {/* Table Header */}
                 <thead>
-                    <tr className="border-b border-gray-800/60">
+                    <tr className="border-b border-blue-100 dark:border-gray-800/60">
                         <th scope="col" className="px-5 py-3 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wider">
                             Date
                         </th>
@@ -94,7 +94,7 @@ const ExpenseTable = ({ expenses, onDeleteExpense }) => {
                     {expenses.map((expense) => {
                         const payment = getPaymentMethod(expense.category);
                         return (
-                            <tr key={expense.id} className="border-b border-gray-800/30 hover:bg-white/[0.02] transition-colors">
+                            <tr key={expense.id} className="border-b border-blue-100 dark:border-gray-800/30 hover:bg-blue-50 dark:hover:bg-white/[0.02] transition-colors">
 
                                 {/* Date */}
                                 <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-400">
@@ -107,7 +107,7 @@ const ExpenseTable = ({ expenses, onDeleteExpense }) => {
 
                                 {/* Title */}
                                 <td className="px-5 py-4 whitespace-nowrap">
-                                    <span className="text-sm font-medium text-white">{expense.title}</span>
+                                    <span className="text-sm font-medium text-gray-900 dark:text-white">{expense.title}</span>
                                 </td>
 
                                 {/* Category */}

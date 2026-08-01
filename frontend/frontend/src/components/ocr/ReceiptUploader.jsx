@@ -88,7 +88,7 @@ const ReceiptUploader = ({ onImageSelect }) => {
     // Render the custom camera UI if activated
     if (isCameraActive) {
         return (
-            <div className="flex flex-col items-center justify-center bg-[#151a23] rounded-xl border border-gray-800 p-4 h-[400px]">
+            <div className="flex flex-col items-center justify-center bg-[#eef2ff] dark:bg-[#151a23] rounded-xl border border-blue-100 dark:border-gray-800 p-4 h-[400px] transition-colors duration-300">
                 <video
                     ref={videoRef}
                     autoPlay
@@ -120,7 +120,7 @@ const ReceiptUploader = ({ onImageSelect }) => {
             {/* Option 1: Start Webcam in Browser */}
             <div
                 onClick={startCamera}
-                className="bg-[#151a23] rounded-xl border border-gray-800 p-8 flex flex-col items-center justify-center cursor-pointer hover:border-purple-500 hover:bg-[#1a202c] transition-all group"
+                className="bg-[#eef2ff] dark:bg-[#151a23] rounded-xl border border-blue-100 dark:border-gray-800 p-8 flex flex-col items-center justify-center cursor-pointer hover:border-purple-400 dark:hover:border-purple-500 hover:bg-white dark:hover:bg-[#1a202c] transition-all group duration-300"
             >
                 <div className="bg-gray-800 p-4 rounded-full mb-4 group-hover:bg-purple-500/20">
                     <svg className="w-8 h-8 text-gray-300 group-hover:text-purple-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -128,22 +128,22 @@ const ReceiptUploader = ({ onImageSelect }) => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                 </div>
-                <h2 className="text-xl font-bold mb-2 text-white">Scan Receipt</h2>
-                <p className="text-gray-400 text-sm text-center">Use your device camera directly in the browser.</p>
+                <h2 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">Scan Receipt</h2>
+                <p className="text-gray-500 dark:text-gray-400 text-sm text-center">Use your device camera directly in the browser.</p>
             </div>
 
             {/* Option 2: Upload from Documents */}
             <div
                 onClick={() => fileInputRef.current.click()}
-                className="bg-[#151a23] rounded-xl border border-gray-800 p-8 flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 hover:bg-[#1a202c] transition-all group"
+                className="bg-[#eef2ff] dark:bg-[#151a23] rounded-xl border border-blue-100 dark:border-gray-800 p-8 flex flex-col items-center justify-center cursor-pointer hover:border-blue-400 dark:hover:border-blue-500 hover:bg-white dark:hover:bg-[#1a202c] transition-all group duration-300"
             >
                 <div className="bg-gray-800 p-4 rounded-full mb-4 group-hover:bg-blue-500/20">
                     <svg className="w-8 h-8 text-gray-300 group-hover:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                     </svg>
                 </div>
-                <h2 className="text-xl font-bold mb-2 text-white">Upload Document</h2>
-                <p className="text-gray-400 text-sm text-center">Upload a saved image or PDF from your device storage.</p>
+                <h2 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">Upload Document</h2>
+                <p className="text-gray-500 dark:text-gray-400 text-sm text-center">Upload a saved image or PDF from your device storage.</p>
 
                 <input
                     type="file"

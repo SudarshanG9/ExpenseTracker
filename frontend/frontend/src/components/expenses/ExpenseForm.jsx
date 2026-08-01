@@ -37,7 +37,7 @@ const ExpenseForm = ({ onSubmit, onCancel, initialData = null }) => {
     };
 
     // Shared input styles
-    const inputStyles = "w-full px-3 py-2.5 bg-[#1a1f2e] border border-gray-700/50 rounded-lg text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all";
+    const inputStyles = "w-full px-3 py-2.5 bg-white dark:bg-[#1a1f2e] border border-gray-300 dark:border-gray-700/50 rounded-lg text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all";
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -155,7 +155,7 @@ const ExpenseForm = ({ onSubmit, onCancel, initialData = null }) => {
                 <button
                     type="button"
                     onClick={onCancel}
-                    className="px-5 py-2.5 text-sm font-medium text-gray-300 bg-transparent border border-gray-700/50 rounded-lg hover:bg-white/5 focus:outline-none transition-colors"
+                    className="px-5 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-300 bg-transparent border border-gray-300 dark:border-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 focus:outline-none transition-colors"
                 >
                     Cancel
                 </button>

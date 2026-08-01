@@ -57,12 +57,12 @@ const Expenses = () => {
     );
 
     return (
-        <div className="h-full text-white max-w-[1600px] mx-auto">
+        <div className="h-full text-gray-900 dark:text-white max-w-[1600px] mx-auto transition-colors duration-300">
 
             {/* Header */}
             <div className="mb-6">
                 <h1 className="text-2xl font-bold">Expenses</h1>
-                <p className="text-sm text-gray-400">Track, manage and analyze your expenses.</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Track, manage and analyze your expenses.</p>
             </div>
 
             {/* Main Layout: Flexbox to put Table on left, Form on right */}
@@ -72,7 +72,7 @@ const Expenses = () => {
                 <div className="flex-1 space-y-4 overflow-hidden">
 
                     {/* Controls Bar */}
-                    <div className="flex flex-wrap items-center gap-3 bg-[#151a23] p-3 rounded-xl border border-gray-800">
+                    <div className="flex flex-wrap items-center gap-3 bg-[#eef2ff] dark:bg-[#151a23] p-3 rounded-xl border border-blue-100 dark:border-gray-800 transition-colors duration-300">
                         <SearchBar
                             searchTerm={searchQuery}
                             onSearchChange={setSearchQuery}
@@ -81,7 +81,7 @@ const Expenses = () => {
                     </div>
 
                     {/* Table Container */}
-                    <div className="bg-[#151a23] rounded-xl border border-gray-800 p-1 overflow-x-auto">
+                    <div className="bg-[#eef2ff] dark:bg-[#151a23] rounded-xl border border-blue-100 dark:border-gray-800 p-1 overflow-x-auto transition-colors duration-300">
                         <ExpenseTable
                             expenses={filteredExpenses}
                             onDeleteExpense={handleDeleteExpense}
@@ -91,7 +91,7 @@ const Expenses = () => {
                 </div>
 
                 {/* RIGHT SIDE: Persistent Add Expense Panel */}
-                <div className="w-full xl:w-[400px] bg-[#151a23] rounded-xl border border-gray-800 p-6 h-fit shrink-0">
+                <div className="w-full xl:w-[400px] bg-[#eef2ff] dark:bg-[#151a23] rounded-xl border border-blue-100 dark:border-gray-800 p-6 h-fit shrink-0 transition-colors duration-300">
                     <div className="flex justify-between items-center mb-6">
                         <h2 className="text-lg font-bold">Add Expense</h2>
                     </div>

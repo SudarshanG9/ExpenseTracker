@@ -52,9 +52,9 @@ const ExpenseBarChart = ({ timeframe = 'Monthly', expenses = [] }) => {
     const CustomTooltip = ({ active, payload, label }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="bg-[#1a1f2e] border border-gray-700 rounded-lg px-3 py-2 shadow-xl">
-                    <p className="text-xs text-gray-400 mb-1">{label}</p>
-                    <p className="text-sm font-semibold text-white">{formatCurrency(payload[0].value)}</p>
+                <div className="bg-white dark:bg-[#1a1f2e] border border-gray-100 dark:border-gray-700 rounded-lg px-3 py-2 shadow-xl">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">{label}</p>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">{formatCurrency(payload[0].value)}</p>
                 </div>
             );
         }
