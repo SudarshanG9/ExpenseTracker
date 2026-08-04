@@ -1,5 +1,5 @@
 import React from 'react';
-import { useCurrency } from '../../../context/CurrencyContext';
+import { useCurrency } from '../../context/CurrencyContext';
 
 /**
  * RecentExpenses Component

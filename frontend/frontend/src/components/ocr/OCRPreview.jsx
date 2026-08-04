@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useCurrency } from '../../../context/CurrencyContext';
+import { useCurrency } from '../../context/CurrencyContext';
 
 /**
  * OCRPreview Component
