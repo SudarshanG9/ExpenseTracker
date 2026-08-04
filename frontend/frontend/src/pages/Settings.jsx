@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ThresholdForm from '../components/settings/ThresholdForm';
 import NotificationSettings from '../components/settings/NotificationSettings';
 import ThemeSwitcher from '../components/settings/ThemeSwitcher';
+import CurrencySwitcher from '../components/settings/CurrencySwitcher';
 import { userAPI } from '../services/api';
 
 const Settings = () => {
@@ -137,6 +138,7 @@ const Settings = () => {
                         <ThresholdForm />
                         <hr className="border-gray-200 dark:border-gray-800" />
                         <NotificationSettings />
+                        <CurrencySwitcher />
                     </div>
                 </section>
 

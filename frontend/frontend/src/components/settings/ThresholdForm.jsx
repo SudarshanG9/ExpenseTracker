@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useCurrency } from '../../../context/CurrencyContext';
 
 const ThresholdForm = () => {
+    const { currency } = useCurrency();
     const [monthlyGoal, setMonthlyGoal] = useState(2500);
 
     return (
@@ -10,7 +12,7 @@ const ThresholdForm = () => {
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Set a target to keep your monthly expenses in check.</p>
             </div>
             <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">{currency.symbol}</span>
                 <input
                     type="number"
                     value={monthlyGoal}

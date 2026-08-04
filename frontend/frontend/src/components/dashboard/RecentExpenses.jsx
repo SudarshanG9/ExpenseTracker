@@ -1,4 +1,5 @@
 import React from 'react';
+import { useCurrency } from '../../../context/CurrencyContext';
 
 /**
  * RecentExpenses Component
@@ -12,10 +13,7 @@ const RecentExpenses = ({ expenses = [] }) => {
         .sort((a, b) => new Date(b.date) - new Date(a.date))
         .slice(0, 5);
 
-    // Helper function to format currency
-    const formatCurrency = (amount) => {
-        return `₹${amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
-    };
+    const { formatCurrency } = useCurrency();
 
     // Helper to get category icon + color
     const getCategoryStyle = (category) => {

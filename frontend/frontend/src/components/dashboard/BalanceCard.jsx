@@ -1,4 +1,5 @@
 import React from 'react';
+import { useCurrency } from '../../../context/CurrencyContext';
 
 /**
  * BalanceCard Component
@@ -7,14 +8,7 @@ import React from 'react';
  * (like Current Balance, Total Spent, or Initial Balance).
  */
 const BalanceCard = ({ title, amount, icon, trend }) => {
-    // Utility to format numbers as currency (₹ to match reference)
-    const formatCurrency = (value) => {
-        return new Intl.NumberFormat('en-IN', {
-            style: 'currency',
-            currency: 'INR',
-            maximumFractionDigits: 2,
-        }).format(value);
-    };
+    const { formatCurrency } = useCurrency();
 
     return (
         <div className="bg-white dark:bg-[#151a23] rounded-xl border border-gray-100 dark:border-gray-800/60 p-5 flex flex-col justify-between relative overflow-hidden group shadow-sm hover:shadow transition-all">

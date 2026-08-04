@@ -2,14 +2,20 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api import expenses, receipts, user
 from app.database import create_tables
+import os
 import app.models.expense  # ensure model is registered with Base
 import app.models.user
 
 app = FastAPI()
 
+frontend_url = os.getenv("FRONTEND_URL")
+origins = ["http://localhost:5173", "http://127.0.0.1:5173"]
+if frontend_url:
+    origins.append(frontend_url)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

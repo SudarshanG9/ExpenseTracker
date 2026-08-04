@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useCurrency } from '../../../context/CurrencyContext';
 
 /**
  * OCRPreview Component
@@ -8,6 +9,7 @@ import React, { useState } from 'react';
  * it to the database.
  */
 const OCRPreview = ({ extractedData, onSave, onDiscard }) => {
+    const { currency } = useCurrency();
     // Local state to manage the edits before finalizing.
     // We initialize with the AI's extracted data, or fall back to empty strings.
     const [formData, setFormData] = useState({
@@ -73,7 +75,7 @@ const OCRPreview = ({ extractedData, onSave, onDiscard }) => {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-400 mb-1">Total Amount ($)</label>
+                        <label className="block text-sm font-medium text-gray-400 mb-1">Total Amount ({currency.symbol})</label>
                         <input
                             type="number"
                             name="amount"

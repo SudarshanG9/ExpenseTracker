@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useCurrency } from '../../../context/CurrencyContext';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 
 /**
@@ -8,8 +9,8 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
  * It includes a dropdown to filter the data by timeframe (Daily, Weekly, Monthly).
  */
 const CategoryPieChart = ({ expenses = [] }) => {
-    // 1. STATE LIVES HERE: To control the active timeframe filter
     const [timeframe, setTimeframe] = useState('Monthly');
+    const { formatCurrency } = useCurrency();
 
     // Aggregate expenses by category
     const categoryTotals = expenses.reduce((acc, expense) => {
@@ -35,7 +36,7 @@ const CategoryPieChart = ({ expenses = [] }) => {
             return (
                 <div className="bg-white dark:bg-[#1a1f2e] border border-gray-100 dark:border-gray-700 rounded-lg px-3 py-2 shadow-xl">
                     <p className="text-xs text-gray-500 dark:text-gray-400">{payload[0].name}</p>
-                    <p className="text-sm font-semibold text-gray-900 dark:text-white">₹{payload[0].value.toLocaleString('en-IN')}</p>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">{formatCurrency(payload[0].value)}</p>
                 </div>
             );
         }
@@ -86,7 +87,7 @@ const CategoryPieChart = ({ expenses = [] }) => {
 
                     {/* Center Label */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                        <span className="text-lg font-bold text-gray-900 dark:text-white">₹{total.toLocaleString('en-IN')}</span>
+                        <span className="text-lg font-bold text-gray-900 dark:text-white">{formatCurrency(total)}</span>
                         <span className="text-[10px] text-gray-500 dark:text-gray-400">Total</span>
                     </div>
                 </div>
@@ -105,7 +106,7 @@ const CategoryPieChart = ({ expenses = [] }) => {
                                     <span className="text-gray-700 dark:text-gray-300">{item.name}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <span className="text-gray-900 dark:text-white font-medium">₹{item.value.toLocaleString('en-IN')}</span>
+                                    <span className="text-gray-900 dark:text-white font-medium">{formatCurrency(item.value)}</span>
                                     <span className="text-gray-500 dark:text-gray-400 w-12 text-right">({percentage}%)</span>
                                 </div>
                             </div>

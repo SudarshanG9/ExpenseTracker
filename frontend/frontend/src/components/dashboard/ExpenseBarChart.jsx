@@ -1,4 +1,5 @@
 import React from 'react';
+import { useCurrency } from 'context/CurrencyContext';
 import {
     BarChart,
     Bar,
@@ -17,17 +18,18 @@ import {
  * (Daily, Weekly, or Monthly).
  */
 const ExpenseBarChart = ({ timeframe = 'Monthly', expenses = [] }) => {
-    
+    const { currency, formatCurrency } = useCurrency();
+
     // Simple dynamic aggregation based on the raw date strings (YYYY-MM-DD).
     let activeData = [];
-    
+
     if (timeframe === 'Monthly') {
         const monthlyTotals = expenses.reduce((acc, exp) => {
             const month = exp.date ? exp.date.substring(0, 7) : 'Unknown'; // e.g. 2026-05
             acc[month] = (acc[month] || 0) + (Number(exp.amount) || 0);
             return acc;
         }, {});
-        
+
         activeData = Object.keys(monthlyTotals).sort().map(month => ({
             label: month,
             amount: monthlyTotals[month]
@@ -39,14 +41,13 @@ const ExpenseBarChart = ({ timeframe = 'Monthly', expenses = [] }) => {
             acc[day] = (acc[day] || 0) + (Number(exp.amount) || 0);
             return acc;
         }, {});
-        
+
         activeData = Object.keys(dailyTotals).sort().map(day => ({
             label: day,
             amount: dailyTotals[day]
         }));
     }
 
-    const formatCurrency = (value) => `₹${value.toLocaleString('en-IN')}`;
 
     // Custom tooltip styled for dark theme
     const CustomTooltip = ({ active, payload, label }) => {
@@ -85,7 +86,7 @@ const ExpenseBarChart = ({ timeframe = 'Monthly', expenses = [] }) => {
                         axisLine={false}
                         tickLine={false}
                         tick={{ fill: '#6B7280', fontSize: 11 }}
-                        tickFormatter={(value) => `₹${value}`}
+                        tickFormatter={(value) => `${currency.symbol}${value}`}
                     />
 
                     {/* Tooltip */}

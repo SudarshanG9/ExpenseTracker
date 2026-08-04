@@ -1,4 +1,5 @@
 import React from 'react';
+import { useCurrency } from '../../../context/CurrencyContext';
 
 /**
  * ExpenseTable Component
@@ -8,10 +9,7 @@ import React from 'react';
  */
 const ExpenseTable = ({ expenses, onDeleteExpense }) => {
 
-    // Helper to format currency
-    const formatCurrency = (amount) => {
-        return `₹${amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
-    };
+    const { formatCurrency } = useCurrency();
 
     // Helper to render colored category badges
     const getCategoryBadge = (category) => {
