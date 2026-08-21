@@ -22,41 +22,29 @@ const OCR = () => {
         formData.append('file', file);
 
         try {
-            /* 
-            // --- REAL FASTAPI INTEGRATION ---
-            const response = await fetch('http://localhost:8000/api/ocr', {
-              method: 'POST',
-              body: formData,
+            const response = await fetch("http://localhost:8000/api/receipts/extract", {
+                method: "POST",
+                body: formData, // Do NOT set Content-Type header manually; the browser must calculate the multipart boundary
             });
-      
+            
             if (!response.ok) {
-              throw new Error('Failed to process image via OCR endpoint');
+                throw new Error('Failed to process image via OCR endpoint');
             }
-      
-            const data = await response.json();
-      
-            setExtractedData({
-              imageUrl: previewUrl,
-              name: data.name || '',
-              amount: data.amount || 0,
-              date: data.date || new Date().toISOString().split('T')[0],
-              category: data.category || 'Other',
-            });
-            setStep('preview');
-            */
-
-            // --- SIMULATED BACKEND RESPONSE (For UI Testing) ---
-            setTimeout(() => {
+            
+            const result = await response.json();
+            
+            if (result.status === "success") {
                 setExtractedData({
                     imageUrl: previewUrl,
-                    name: 'Starbucks Coffee',
-                    amount: 14.50,
-                    date: new Date().toISOString().split('T')[0],
-                    category: 'Food',
+                    name: result.data.merchant || '',
+                    amount: parseFloat(result.data.amount) || 0,
+                    date: result.data.date || new Date().toISOString().split('T')[0],
+                    category: 'Misc', // category is not returned by new ML pipeline yet
                 });
                 setStep('preview');
-            }, 1800);
-
+            } else {
+                throw new Error(result.detail || 'Failed to extract receipt data');
+            }
         } catch (err) {
             console.error('OCR Error:', err);
             setError('Failed to extract receipt data. Please try again or enter details manually.');
@@ -105,7 +93,7 @@ const OCR = () => {
             {/* Header Section */}
             <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-2 border-b border-gray-800 pb-4">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-white">Receipt Scanner</h1>
+                    <h1 className="text-2xl font-bold tracking-tight text-gray">Receipt Scanner</h1>
                     <p className="text-sm text-gray-400 mt-1">
                         Automate expense tracking by extracting structured data from receipts.
                     </p>
