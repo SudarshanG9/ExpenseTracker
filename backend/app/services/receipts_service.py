@@ -1,104 +1,42 @@
-import pytesseract
-import cv2
-import re
-from datetime import datetime
+import os
+import shutil
+import uuid
+from fastapi import UploadFile
+from fastapi.concurrency import run_in_threadpool
 
+# Path to the temp directory visible in your screenshot
+TEMP_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "temp")
 
+async def process_receipt_image(file: UploadFile, ml_engine) -> dict:
+    """
+    Safely writes the byte stream to disk, routes it through the LayoutLMv3
+    threadpool, and yields the structured JSON dictionary.
+    """
+    if not os.path.exists(TEMP_DIR):
+        os.makedirs(TEMP_DIR)
 
+    # Generate a collision-proof UUID for concurrent API requests
+    transient_filename = f"{uuid.uuid4()}_{file.filename}"
+    file_path = os.path.join(TEMP_DIR, transient_filename)
 
+    try:
+        # 1. Spool the uploaded bytes into the temp directory
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
 
-
-
-def preprocess_image(image_path: str):
-    image = cv2.imread(image_path)
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    _, thresh = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY)
-    return thresh
-
-
-def extract_text(image_path: str):
-    image = preprocess_image(image_path)
-    text = pytesseract.image_to_string(image)
-    return text
-
-
-def extract_product(text: str):
-    
-    pattern = r"([A-Za-z\s]+)[\.\s]+(\d+\.\d+)"
-
-    matches = re.findall(pattern, text)
-
-    products = []
-
-    for name,price in matches:
-        product = {
-            "name": name.strip(),
-            "price": float(price)
+        # 2. Delegate the heavy tensor math to an ASGI background thread
+        extracted_data = await run_in_threadpool(ml_engine.parse, file_path)
+        
+        # 3. Restructure for the React Frontend
+        return {
+            "merchant": extracted_data.get("store.nm", "Unknown"),
+            "amount": extracted_data.get("total.total_price", "0.00"),
+            "tax": extracted_data.get("total.tax_price", "0.00"),
+            "date": extracted_data.get("date", ""),
+            "raw_payload": extracted_data # Send full payload for debugging
         }
-        products.append(product)
-    return products
 
-def extract_total(text: str):
-    pattern = r"Total:\s+(\d+\.\d+)"
-    match = re.search(pattern, text, re.IGNORECASE)
-    if match:
-        return float(match.group(1))
-
-    return None
-
-
-def extract_date(text: str):
-    pattern = r"(\d{2}/\d{2}/\d{4})"
-    match = re.search(pattern, text)
-    if match:
-        return datetime.strptime(match.group(1), "%m/%d/%Y").date()
-    
-
-
-
-
-CATEGORY = {
-    "Food": ["restaurant", "cafe", "coffee", "pizza", "burger", "starbucks"],
-    "Transport": ["uber", "ola", "taxi", "fuel", "petrol"],
-    "Shopping": ["amazon", "mall", "store"],
-    "Groceries": ["walmart", "supermarket", "grocery"]
-}
-
-
-
-
-def classify_category(text: str):
-    for category, keywords in CATEGORY.items():
-        for keyword in keywords:
-            if keyword in text.lower():
-                return category
-    return "Misc"
-
-    
-def ocr(image_path: str):
-    text = extract_text(image_path)
-    products = extract_product(text)
-    total = extract_total(text)
-    date_obj = extract_date(text)
-
-    final_amount = 0.0
-    final_name = "Receipt"
-    
-    if total:
-        final_amount = total
-    elif products:
-        final_amount = sum(p["price"] for p in products)
-        if len(products) == 1:
-            final_name = products[0]["name"]
-        else:
-            final_name = f"Receipt ({len(products)} items)"
-
-    date_str = date_obj.strftime("%Y-%m-%d") if date_obj else ""
-
-    return {
-        "name": final_name,
-        "amount": final_amount,
-        "date": date_str,
-        "category": classify_category(text)
-    }
-
+    finally:
+        # 4. Strict cleanup protocol
+        if os.path.exists(file_path):
+            os.remove(file_path)
