@@ -28,7 +28,7 @@ const ReceiptUploader = ({ onImageSelect }) => {
         const file = e.target.files[0];
         if (file) {
             const imageUrl = URL.createObjectURL(file);
-            onImageSelect(imageUrl);
+            onImageSelect(file, imageUrl);
         }
     };
 
@@ -79,7 +79,7 @@ const ReceiptUploader = ({ onImageSelect }) => {
                 if (blob) {
                     const imageUrl = URL.createObjectURL(blob);
                     stopCamera();
-                    onImageSelect(imageUrl); // Send to parent component
+                    onImageSelect(blob, imageUrl); // Send both File/Blob and preview URL to parent
                 }
             }, 'image/jpeg');
         }

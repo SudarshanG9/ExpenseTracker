@@ -5,8 +5,25 @@ from app.database import create_tables
 import os
 import app.models.expense  # ensure model is registered with Base
 import app.models.user
+from contextlib import asynccontextmanager
+from app.services.ml_engine import ReceiptExtractionEngine
 
-app = FastAPI()
+WEIGHTS_PATH = os.path.join(os.path.dirname(__file__), 'services', 'weights.pth')
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # --- STARTUP PHASE ---
+    print("[*] Booting Machine Learning Pipeline...")
+    # Instantiate the engine globally. This takes 2-4 seconds but only happens once.
+    app.state.ml_engine = ReceiptExtractionEngine(weights_path=WEIGHTS_PATH)
+    print("[+] Model loaded into ASGI memory.")
+    
+    yield
+    
+    # --- SHUTDOWN PHASE ---
+    print("[*] Releasing ML Engine from memory...")
+    app.state.ml_engine = None
+
+app = FastAPI(lifespan=lifespan)
 
 frontend_url = os.getenv("FRONTEND_URL")
 origins = ["http://localhost:5173", "http://127.0.0.1:5173"]

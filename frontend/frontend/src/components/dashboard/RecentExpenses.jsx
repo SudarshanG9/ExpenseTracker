@@ -18,11 +18,12 @@ const RecentExpenses = ({ expenses = [] }) => {
     // Helper to get category icon + color
     const getCategoryStyle = (category) => {
         const styles = {
-            'Food & Dining': { bg: 'bg-emerald-500/15', text: 'text-emerald-400', icon: '🍽️' },
+            'Food': { bg: 'bg-emerald-500/15', text: 'text-emerald-400', icon: '🍽️' },
             'Transport': { bg: 'bg-blue-500/15', text: 'text-blue-400', icon: '🚗' },
             'Shopping': { bg: 'bg-purple-500/15', text: 'text-purple-400', icon: '🛒' },
             'Entertainment': { bg: 'bg-orange-500/15', text: 'text-orange-400', icon: '🎬' },
             'Utilities': { bg: 'bg-yellow-500/15', text: 'text-yellow-400', icon: '⚡' },
+            'Housing': { bg: 'bg-indigo-500/15', text: 'text-indigo-400', icon: '🏠' },
         };
         return styles[category] || { bg: 'bg-gray-500/15', text: 'text-gray-400', icon: '📦' };
     };

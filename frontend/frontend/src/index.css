@@ -38,7 +38,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(0.7);
 }
 
-select option {
+.dark select option {
   background-color: #1a1f2e;
   color: #ffffff;
 }

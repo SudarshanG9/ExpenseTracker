@@ -13,8 +13,16 @@ export const CurrencyProvider = ({ children }) => {
     }, [currency]);
 
     const formatCurrency = (amount) => {
-        // Use standard Intl.NumberFormat based on currency code
-        return new Intl.NumberFormat('en-IN', {
+        // Map currency codes to appropriate locales for correct number grouping
+        const localeMap = {
+            'INR': 'en-IN',
+            'USD': 'en-US',
+            'EUR': 'de-DE',
+            'GBP': 'en-GB',
+            'JPY': 'ja-JP',
+        };
+        const locale = localeMap[currency.code] || 'en-US';
+        return new Intl.NumberFormat(locale, {
             style: 'currency',
             currency: currency.code,
             minimumFractionDigits: 2
