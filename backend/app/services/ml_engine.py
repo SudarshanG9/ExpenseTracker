@@ -148,30 +148,48 @@ class ReceiptExtractionEngine:
         predictions = outputs.logits.argmax(-1).squeeze().cpu().tolist()
         token_boxes = encoding.bbox.squeeze().cpu().tolist()
         
-        extracted_data = {}
+        extracted_entities = {}
+        
+        last_box = None
+        last_clean_label = None
         
         for idx, pred_id in enumerate(predictions):
             label = ID2LABEL[pred_id]
             if label == "O":
+                last_box = None
+                last_clean_label = None
                 continue
                 
+            is_b_tag = label.startswith("B-")
             clean_label = label[2:] # Strip the B- / I- BIO tags
             
             # Map sub-token fragments back to their original root word via spatial geometry
-            current_box = token_boxes[idx]
+            current_box = tuple(token_boxes[idx])
             original_word = None
             
             for word, box in zip(words, boxes):
-                if box == current_box:
+                if tuple(box) == current_box:
                     original_word = word
                     break
                     
-            if original_word:
-                if clean_label not in extracted_data:
-                    extracted_data[clean_label] = []
-                # Prevent concatenation duplication if multiple sub-tokens map to the same root word box
-                if original_word not in extracted_data[clean_label]:
-                    extracted_data[clean_label].append(original_word)
+            if not original_word:
+                continue
 
-        # Merge string arrays and return a clean Python Dictionary
-        return {k: " ".join(v) for k, v in extracted_data.items()}
+            if clean_label not in extracted_entities:
+                extracted_entities[clean_label] = []
+                
+            # Prevent concatenation duplication if multiple sub-tokens map to the same root word box
+            if current_box == last_box and clean_label == last_clean_label:
+                continue
+
+            # If it's a B- tag or we don't have any entities yet, start a new one
+            if is_b_tag or len(extracted_entities[clean_label]) == 0:
+                extracted_entities[clean_label].append([original_word])
+            else:
+                extracted_entities[clean_label][-1].append(original_word)
+
+            last_box = current_box
+            last_clean_label = clean_label
+
+        # Merge sub-tokens into final strings, returning a dictionary of lists
+        return {k: [" ".join(entity) for entity in entities] for k, entities in extracted_entities.items()}

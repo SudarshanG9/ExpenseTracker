@@ -27,12 +27,27 @@ async def process_receipt_image(file: UploadFile, ml_engine) -> dict:
         # 2. Delegate the heavy tensor math to an ASGI background thread
         extracted_data = await run_in_threadpool(ml_engine.parse, file_path)
         
+        # Safely extract the first element for scalar fields
+        def get_first(key, default):
+            val = extracted_data.get(key)
+            return val[0] if val and len(val) > 0 else default
+
+        # Reconstruct line items by zipping names and prices
+        names = extracted_data.get("menu.nm", [])
+        prices = extracted_data.get("menu.price", [])
+        line_items = []
+        for i in range(max(len(names), len(prices))):
+            name = names[i] if i < len(names) else "Unknown Item"
+            price = prices[i] if i < len(prices) else "0.00"
+            line_items.append({"name": name, "price": price})
+
         # 3. Restructure for the React Frontend
         return {
-            "merchant": extracted_data.get("store.nm", "Unknown"),
-            "amount": extracted_data.get("total.total_price", "0.00"),
-            "tax": extracted_data.get("total.tax_price", "0.00"),
-            "date": extracted_data.get("date", ""),
+            "merchant": get_first("store.nm", "Unknown"),
+            "amount": get_first("total.total_price", "0.00"),
+            "tax": get_first("total.tax_price", "0.00"),
+            "date": get_first("date", ""),
+            "items": line_items,
             "raw_payload": extracted_data # Send full payload for debugging
         }
 
